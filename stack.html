@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technology Stack — Cryonic Systems</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg-primary: #0e0e0e; --bg-secondary: #141414; --bg-card: #1a1a1a;
+    --border: #262626; --border-hover: #3a3a3a;
+    --accent-dim: rgba(255,255,255,0.06);
+    --text-primary: #e0e0e0; --text-secondary: #888888; --text-muted: #555555;
+    --white: #ffffff; --nav-height: 64px;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Sora', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; min-height: 100vh; }
+  body::before { content: ''; position: fixed; inset: 0; opacity: 0.025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); background-size: 256px; pointer-events: none; z-index: 9999; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--nav-height); padding: 0 3rem; display: flex; align-items: center; justify-content: space-between; background: rgba(14,14,14,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
+  .logo { display: flex; align-items: center; text-decoration: none; }
+  .logo-img { height: 38px; width: auto; display: block; }
+  .nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
+  .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; font-weight: 400; letter-spacing: 0.03em; transition: color 0.25s; position: relative; }
+  .nav-links a:hover, .nav-links a.active { color: var(--white); }
+  .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--white); transition: width 0.3s ease; }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+  .nav-cta { padding: 0.6rem 1.5rem !important; border: 1px solid var(--text-muted) !important; border-radius: 6px; color: var(--white) !important; font-weight: 500 !important; transition: all 0.3s ease !important; }
+  .nav-cta:hover { background: var(--white) !important; color: var(--bg-primary) !important; border-color: var(--white) !important; }
+  .nav-cta::after { display: none !important; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+  .hamburger span { width: 24px; height: 2px; background: var(--text-primary); }
+
+  .page-content { padding-top: var(--nav-height); min-height: calc(100vh - 120px); }
+  section { padding: 5rem 3rem; position: relative; }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
+  .section-title { font-size: clamp(1.8rem,3.5vw,2.8rem); font-weight: 700; letter-spacing: -0.03em; margin-bottom: 1rem; line-height: 1.15; color: var(--white); }
+  .section-desc { color: var(--text-secondary); max-width: 540px; font-size: 1.05rem; margin-bottom: 3.5rem; }
+
+  .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2rem; background: var(--white); color: var(--bg-primary); font-family: 'Sora', sans-serif; font-size: 0.9rem; font-weight: 600; text-decoration: none; border-radius: 8px; border: none; cursor: pointer; transition: all 0.3s ease; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(255,255,255,0.1); }
+  .btn-secondary { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2rem; background: transparent; color: var(--text-primary); font-family: 'Sora', sans-serif; font-size: 0.9rem; font-weight: 500; text-decoration: none; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: all 0.3s ease; }
+  .btn-secondary:hover { border-color: var(--text-muted); background: var(--bg-secondary); }
+
+  footer { border-top: 1px solid var(--border); padding: 3rem; display: flex; align-items: center; justify-content: space-between; }
+  .footer-left { display: flex; align-items: center; gap: 2rem; }
+  .footer-copy { font-size: 0.8rem; color: var(--text-muted); }
+  .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+  .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.8rem; transition: color 0.25s; }
+  .footer-links a:hover { color: var(--text-secondary); }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; background: rgba(14,14,14,0.95); backdrop-filter: blur(20px); padding: 1.5rem; gap: 1.25rem; border-bottom: 1px solid var(--border); }
+    .nav-links.open { display: flex; }
+    .hamburger { display: flex; }
+    section { padding: 3rem 1.5rem; }
+    footer { flex-direction: column; gap: 1.5rem; padding: 2rem 1.5rem; }
+    .footer-left { flex-direction: column; gap: 1rem; }
+  }
+
+
+  .stack-row { display: flex; flex-wrap: wrap; gap: 0.75rem; max-width: 900px; }
+  .stack-tag { padding: 0.55rem 1.25rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 100px; font-size: 0.85rem; color: var(--text-secondary); font-family: 'DM Mono', monospace; transition: all 0.3s ease; cursor: default; }
+  .stack-tag:hover { border-color: var(--text-muted); color: var(--white); background: rgba(255,255,255,0.05); }
+  .stack-categories { max-width: 900px; margin-top: 3rem; }
+  .stack-category { margin-bottom: 2.5rem; }
+  .stack-category h3 { font-size: 0.95rem; font-weight: 600; color: var(--white); margin-bottom: 1rem; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo"><img src="Logo.PNG" alt="Cryonic Systems" class="logo-img"></a>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="services.html">Services</a></li>
+    <li><a href="stack.html" class="active">Stack</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+<div class="page-content">
+<section>
+  <div class="reveal">
+    <div class="section-label">Technology</div>
+    <h2 class="section-title">Our toolbox</h2>
+    <p class="section-desc">We work with proven, modern technologies chosen for reliability, performance, and developer experience.</p>
+  </div>
+  <div class="stack-categories reveal">
+    <div class="stack-category">
+      <h3>Languages</h3>
+      <div class="stack-row">
+        <span class="stack-tag">C#</span><span class="stack-tag">Rust</span><span class="stack-tag">TypeScript</span><span class="stack-tag">Python</span><span class="stack-tag">Go</span>
+      </div>
+    </div>
+    <div class="stack-category">
+      <h3>Frameworks</h3>
+      <div class="stack-row">
+        <span class="stack-tag">.NET</span><span class="stack-tag">Blazor</span><span class="stack-tag">React</span><span class="stack-tag">Angular</span><span class="stack-tag">Node.js</span>
+      </div>
+    </div>
+    <div class="stack-category">
+      <h3>Cloud & DevOps</h3>
+      <div class="stack-row">
+        <span class="stack-tag">Azure</span><span class="stack-tag">AWS</span><span class="stack-tag">Docker</span><span class="stack-tag">Kubernetes</span><span class="stack-tag">Terraform</span><span class="stack-tag">GitHub Actions</span>
+      </div>
+    </div>
+    <div class="stack-category">
+      <h3>Data</h3>
+      <div class="stack-row">
+        <span class="stack-tag">PostgreSQL</span><span class="stack-tag">SQL Server</span><span class="stack-tag">Redis</span><span class="stack-tag">GraphQL</span><span class="stack-tag">MongoDB</span>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+<footer>
+  <div class="footer-left">
+    <a href="index.html" class="logo"><img src="Logo.PNG" alt="Cryonic Systems" class="logo-img" style="height:28px;"></a>
+    <span class="footer-copy">&copy; 2026 Cryonic Systems. All rights reserved.</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="services.html">Services</a></li>
+    <li><a href="stack.html">Stack</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</footer>
+<script>
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+</script>
+
+</body>
+</html>

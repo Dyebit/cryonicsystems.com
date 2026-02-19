@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services — Cryonic Systems</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg-primary: #0e0e0e; --bg-secondary: #141414; --bg-card: #1a1a1a;
+    --border: #262626; --border-hover: #3a3a3a;
+    --accent-dim: rgba(255,255,255,0.06);
+    --text-primary: #e0e0e0; --text-secondary: #888888; --text-muted: #555555;
+    --white: #ffffff; --nav-height: 64px;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Sora', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; min-height: 100vh; }
+  body::before { content: ''; position: fixed; inset: 0; opacity: 0.025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); background-size: 256px; pointer-events: none; z-index: 9999; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--nav-height); padding: 0 3rem; display: flex; align-items: center; justify-content: space-between; background: rgba(14,14,14,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
+  .logo { display: flex; align-items: center; text-decoration: none; }
+  .logo-img { height: 38px; width: auto; display: block; }
+  .nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
+  .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; font-weight: 400; letter-spacing: 0.03em; transition: color 0.25s; position: relative; }
+  .nav-links a:hover, .nav-links a.active { color: var(--white); }
+  .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--white); transition: width 0.3s ease; }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+  .nav-cta { padding: 0.6rem 1.5rem !important; border: 1px solid var(--text-muted) !important; border-radius: 6px; color: var(--white) !important; font-weight: 500 !important; transition: all 0.3s ease !important; }
+  .nav-cta:hover { background: var(--white) !important; color: var(--bg-primary) !important; border-color: var(--white) !important; }
+  .nav-cta::after { display: none !important; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+  .hamburger span { width: 24px; height: 2px; background: var(--text-primary); }
+
+  .page-content { padding-top: var(--nav-height); min-height: calc(100vh - 120px); }
+  section { padding: 5rem 3rem; position: relative; }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
+  .section-title { font-size: clamp(1.8rem,3.5vw,2.8rem); font-weight: 700; letter-spacing: -0.03em; margin-bottom: 1rem; line-height: 1.15; color: var(--white); }
+  .section-desc { color: var(--text-secondary); max-width: 540px; font-size: 1.05rem; margin-bottom: 3.5rem; }
+
+  .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2rem; background: var(--white); color: var(--bg-primary); font-family: 'Sora', sans-serif; font-size: 0.9rem; font-weight: 600; text-decoration: none; border-radius: 8px; border: none; cursor: pointer; transition: all 0.3s ease; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(255,255,255,0.1); }
+  .btn-secondary { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2rem; background: transparent; color: var(--text-primary); font-family: 'Sora', sans-serif; font-size: 0.9rem; font-weight: 500; text-decoration: none; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: all 0.3s ease; }
+  .btn-secondary:hover { border-color: var(--text-muted); background: var(--bg-secondary); }
+
+  footer { border-top: 1px solid var(--border); padding: 3rem; display: flex; align-items: center; justify-content: space-between; }
+  .footer-left { display: flex; align-items: center; gap: 2rem; }
+  .footer-copy { font-size: 0.8rem; color: var(--text-muted); }
+  .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+  .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.8rem; transition: color 0.25s; }
+  .footer-links a:hover { color: var(--text-secondary); }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; background: rgba(14,14,14,0.95); backdrop-filter: blur(20px); padding: 1.5rem; gap: 1.25rem; border-bottom: 1px solid var(--border); }
+    .nav-links.open { display: flex; }
+    .hamburger { display: flex; }
+    section { padding: 3rem 1.5rem; }
+    footer { flex-direction: column; gap: 1.5rem; padding: 2rem 1.5rem; }
+    .footer-left { flex-direction: column; gap: 1rem; }
+  }
+
+
+  .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1200px; }
+  .service-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: all 0.4s ease; position: relative; overflow: hidden; }
+  .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); opacity: 0; transition: opacity 0.4s ease; }
+  .service-card:hover { border-color: var(--border-hover); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+  .service-card:hover::before { opacity: 1; }
+  .service-icon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: var(--accent-dim); color: #c8c8c8; margin-bottom: 1.25rem; }
+  .service-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--white); }
+  .service-card p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo"><img src="Logo.PNG" alt="Cryonic Systems" class="logo-img"></a>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="services.html" class="active">Services</a></li>
+    <li><a href="stack.html">Stack</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+<div class="page-content">
+<section>
+  <div class="reveal">
+    <div class="section-label">What We Do</div>
+    <h2 class="section-title">Engineered for complexity,<br/>delivered with clarity</h2>
+    <p class="section-desc">Full-spectrum software development with a focus on resilient architecture and long-term maintainability.</p>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <div class="service-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+      <h3>Custom Software Development</h3>
+      <p>End-to-end design and development of bespoke applications tailored to your specific business requirements and workflows.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/></svg></div>
+      <h3>Cloud & Infrastructure</h3>
+      <p>Scalable cloud-native solutions with automated CI/CD pipelines, container orchestration, and infrastructure as code.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
+      <h3>AI & Intelligent Automation</h3>
+      <p>Machine learning integrations, predictive analytics, and process automation that drives measurable efficiency gains.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+      <h3>Web & Mobile Applications</h3>
+      <p>High-performance, responsive applications built with modern frameworks — delivering fluid experiences across every device.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <h3>Security & Compliance</h3>
+      <p>Secure-by-design architecture with comprehensive testing, vulnerability assessment, and regulatory compliance frameworks.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
+      <h3>Legacy Modernization</h3>
+      <p>Strategic migration of legacy systems to modern architectures — preserving business logic while unlocking new capabilities.</p>
+    </div>
+  </div>
+</section>
+</div>
+<footer>
+  <div class="footer-left">
+    <a href="index.html" class="logo"><img src="Logo.PNG" alt="Cryonic Systems" class="logo-img" style="height:28px;"></a>
+    <span class="footer-copy">&copy; 2026 Cryonic Systems. All rights reserved.</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="services.html">Services</a></li>
+    <li><a href="stack.html">Stack</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</footer>
+<script>
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+</script>
+
+</body>
+</html>
